@@ -1,3 +1,10 @@
+let humanScore = 0;
+let computerScore = 0;
+
+const resultDiv = document.querySelector("#result");
+const scoreDiv = document.querySelector("#score");
+
+
 function getComputerChoice(){
     num = Math.random();
     if (num< 0.33) {
@@ -15,11 +22,12 @@ function getHumanChoice(){
     return choice;
 }
 
-function playRound(humanChoice, computerChoice){
+function playRound(humanChoice){
+    computerChoice = getComputerChoice()
     humanChoice = humanChoice.toLowerCase();
 
     if (humanChoice==computerChoice){
-        console.log("It's a tie");
+        resultDiv.textContent = `Tie! Both chose ${humanChoice}`;
     }
 
     else if(
@@ -28,32 +36,38 @@ function playRound(humanChoice, computerChoice){
         (humanChoice=="paper")&&(computerChoice=="rock")
     ){
         humanScore++;
-        console.log(`You win! ${humanChoice} beats ${computerChoice}`);
+        resultDiv.textContent = `You win! ${humanChoice} beats ${computerChoice}`;
     } 
     else{
         computerScore++;
-        console.log(`Computer Wins! ${computerChoice} beats ${humanChoice}`)
+        resultDiv.textContent = `Computer wins! ${computerChoice} beats ${humanChoice}`;
+    }
+
+    scoreDiv.textContent = `Player: ${humanScore} | Computer: ${computerScore}`;
+
+    checkWinner();
+}
+
+
+function checkWinner(){
+
+    if (humanScore === 5){
+        resultDiv.textContent = "🎉 You won the game!";
+        disableButtons();
+    }
+
+    if (computerScore === 5){
+        resultDiv.textContent = "💻 Computer won the game!";
+        disableButtons();
     }
 }
 
-
-function playGame(rouunds){
-    for (let i = 0; i < rouunds; i++) {
-        console.log("ROUND "+i+":")
-        let compChoice=getComputerChoice();
-        console.log("Computer Choice: "+compChoice);
-        let humChoice=getHumanChoice();
-        console.log("Human Choice: "+ humChoice);
-        playRound(humChoice,compChoice);
-    }
+function disableButtons(){
+    document.querySelector("#rock").disabled = true;
+    document.querySelector("#paper").disabled = true;
+    document.querySelector("#scissors").disabled = true;
 }
 
-let humanScore=0;
-let computerScore=0;
-
-playGame(5)
-if (computerScore>humanScore) {
-    console.log(`Computer Wins! ${computerScore}:${humanScore}`)
-} else{
-    console.log(`You Win! ${humanScore}:${computerScore}`)
-}
+document.querySelector("#rock").addEventListener("click", () => playRound("rock"));
+document.querySelector("#paper").addEventListener("click", () => playRound("paper"));
+document.querySelector("#scissors").addEventListener("click", () => playRound("scissors"));
